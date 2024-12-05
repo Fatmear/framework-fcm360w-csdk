@@ -42,8 +42,11 @@ CFLAGS := $(foreach incpath, $(INCPATHS), -I "$(incpath)") $(CFLAGS)
 LIB_APPLICATION = libql_app.a
 ASRCS	:= $(wildcard $(foreach SRC, $(ASRCS), $(addsuffix /$(SRC), $(subst :, ,$(VPATH)))))
 CSRCS	:= $(wildcard $(foreach SRC, $(CSRCS), $(addsuffix /$(SRC), $(subst :, ,$(VPATH)))))
-CSRCS += $(shell find $(PIO_PROJECT_DIR)/src -type f -name "*.c" | sed "s|^$(PIO_PROJECT_DIR)/||")
-CSRCS += $(shell find $(PIO_PROJECT_DIR)/test -type f -name "*.c" | sed "s|^$(PIO_PROJECT_DIR)/||")
+
+ifneq ($(PIO_PROJECT_DIR),)
+    CSRCS += $(shell find $(PIO_PROJECT_DIR)/src -type f -name "*.c" | sed "s|^$(PIO_PROJECT_DIR)/||")
+	CSRCS += $(shell find $(PIO_PROJECT_DIR)/test -type f -name "*.c" | sed "s|^$(PIO_PROJECT_DIR)/||")
+endif
 
 AOBJS = $(addprefix $(OUTPUTDIR_OBJS)/,$(ASRCS:.S=.o))
 COBJS = $(addprefix $(OUTPUTDIR_OBJS)/,$(CSRCS:.c=.o))

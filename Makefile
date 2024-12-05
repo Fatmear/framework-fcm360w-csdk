@@ -107,7 +107,10 @@ pass1dep:$(KCONFIG_AUTOHEADER)
 KERNEL_LIB_PATH=$(TOPDIR)/ql_kernel/libs
 KERNEL_LIBS:=$(notdir $(wildcard $(KERNEL_LIB_PATH)/*.a))
 KERNEL_LIBS:=$(filter-out libandes.a,$(KERNEL_LIBS))
+
+ifneq ($(PIO_PROJECT_DIR),)
 KERNEL_LIBS += $(wildcard $(PIO_PROJECT_DIR)/lib/*.a)
+endif
 
 COMPONENTS_LIB_PATH=$(TOPDIR)/ql_components/libs
 COMPONENTS_LIBS:=$(notdir $(wildcard $(COMPONENTS_LIB_PATH)/*.a))
