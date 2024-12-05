@@ -1,0 +1,12 @@
+override TOPDIR:=$(shell realpath --relative-to=$(CURDIR) $(TOPDIR))
+override OUTPUTDIR:=$(shell realpath --relative-to=$(CURDIR) $(OUTPUTDIR))
+override BOARD_DIR:=$(shell realpath --relative-to=$(CURDIR) $(BOARD_DIR))
+override GENERATED_DIR:=$(shell realpath --relative-to=$(CURDIR) $(GENERATED_DIR))
+
+include ${GENERATED_DIR}/.config
+include $(TOPDIR)/ql_tools/scripts/Config.mk
+include $(TOPDIR)/ql_tools/scripts/CMarcoDefine.mk
+include $(TOPDIR)/ql_tools/scripts/Toolchain.defs
+
+
+

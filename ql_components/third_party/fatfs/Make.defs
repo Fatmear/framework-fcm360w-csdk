@@ -1,0 +1,11 @@
+VPATH += :third_party
+VPATH += :third_party/fatfs
+VPATH += :third_party/fatfs/include
+
+INCPATHS += third_party/fatfs
+INCPATHS += third_party/fatfs/include
+
+CSRCS += diskio.c
+CSRCS += ffunicode.c
+CSRCS += ff.c
+CSRCS += ffsystem.c

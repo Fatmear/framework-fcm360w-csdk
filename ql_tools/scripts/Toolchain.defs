@@ -1,0 +1,198 @@
+###########################################
+#
+#			cross toolchains
+#
+###########################################
+
+GCC_PATH ?= $(patsubst "%",%,$(CONFIG_GCC_TOOLCHAIN_PATH))
+$(info GCC_PATH=$(GCC_PATH))
+CROSS_COMPILE:=nds32le-elf-
+
+CROSSDEV = $(GCC_PATH)$(CROSS_COMPILE)
+
+# Default toolchain
+
+CC = $(CROSSDEV)gcc
+CXX = $(CROSSDEV)g++
+CPP = $(CROSSDEV)gcc -E -P -x c
+LD = $(CROSSDEV)ld
+STRIP = $(CROSSDEV)strip --strip-unneeded
+AR = $(CROSSDEV)ar rcs
+NM = $(CROSSDEV)nm
+OBJCOPY = $(CROSSDEV)objcopy
+OBJDUMP = $(CROSSDEV)objdump
+READELF = $(CROSSDEV)readelf
+
+
+###########################################
+#
+#			cross toolchains
+#
+###########################################
+MAXOPTIMIZATION := $(patsubst "%",%,$(CONFIG_OPTION_ARCHOPTIMIZATION))
+
+
+###########################################
+#
+#			include path
+#
+###########################################
+ARCHINCLUDES += -include nds32_intrinsic.h  -include $(GENERATED_DIR)/config.h
+
+#ARCHINCLUDES += -I "${TOPDIR}/ql_components" -I "${TOPDIR}/ql_application/include" -I "$(GENERATED_DIR)"
+#ARCHINCLUDES += -I "${TOPDIR}/ql_kernel/arch/${CONFIG_CPU_ARCH}/include" -I "$(BOARD_DIR)/../common/include" -I "$(GENERATED_DIR)"
+ARCHINCLUDES += -I "${TOPDIR}/ql_kernel/arch" -I "$(BOARD_DIR)/../common/include" -I "$(GENERATED_DIR)"
+
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/platform_api"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_common" 
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_adc"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_gpio"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_os_api"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_timer"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_uart"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_wlan"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_spi"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_pwm"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_ble"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_flash"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_spi_flash"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_ch392_lwip"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_w5500_lwip"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_lowpower"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_ota"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_https"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_wdt"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_rtc"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_sys"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_mem"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_i2c"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_i2s"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/quectel/quec_open/quec_fs"
+
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/wifi_crtl"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/cli"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/nv"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/cjson"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/http_server"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/sntp"
+#ARCHINCLUDES += -I "${TOPDIR}/ql_components/fs/fatfs"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/trng"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/uart"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/rtc"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/sdcard"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/flash"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/drivers/hal"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/ota"
+ARCHINCLUDES += -I "$(TOPDIR)/ql_components/ota/include"
+
+ifeq ($(CONFIG_LWIP),y)
+	ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/lwip-2.1.0/src/include" 
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/contrib/port" 
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/lwip-2.1.0/src/apps"
+	ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/lwip-2.1.0/src/include/lwip/apps"
+	ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/lwip-2.1.0/src/include/netif"
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/lwip/lwip-2.1.0/src/include/compat/posix"
+endif
+ifeq ($(CONFIG_MBEDTLS),y)
+	ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/mbedtls/mbedtls/include" 
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/mbedtls/port" 
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/mbedtls/ui"
+endif
+
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/mqtt" 
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/mqtt/include"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/fatfs" 
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/fatfs/include"
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/third_party/curl/curl-8.1.2/include"
+ifeq ($(CONFIG_WIRELESS_WPA_SUPPLICANT),y)
+        ARCHINCLUDES += -I "${TOPDIR}/ql_components/wpa/src/utils"
+endif
+ARCHINCLUDES += -I "${TOPDIR}/ql_components/pthread"
+
+ARCHINCLUDES += $(foreach incpath,$(shell find ${TOPDIR}/ql_components/os -type d),-I "$(incpath)")
+###########################################
+#
+#			version number
+#
+###########################################
+
+REL_V ?= 1.0.0
+SDK_V ?= V0.0.1B01
+
+CMARCODEFINES+=-D__RELEASE_VERSION='"relv$(REL_V)"'
+CMARCODEFINES+=-DSDK_VERSION='"ECR6600F_$(SDK_V)"'
+
+QL_REL_V ?= 1.0.0
+CMARCODEFINES+=-D__QL_RELEASE_VERSION='"relv$(QL_REL_V)"'
+###########################################
+#
+#			default MAC
+#
+###########################################
+CMARCODEFINES+=-DMAC_ADDR_STANDALONE='"00:06:06:00:00:00"'
+
+###########################################
+#
+#			prompt symbol
+#
+###########################################
+CMARCODEFINES+=-DPROMPT_SYMBOL='"$(notdir $(BOARD_DIR))"'
+
+###########################################
+#
+#			cc flags
+#
+###########################################
+
+
+
+ARCHCFLAGS =  -fmessage-length=0 -mcmodel=large -std=gnu99 $(MAXOPTIMIZATION) 
+# ARCHOPTIMIZATION = -fno-omit-frame-pointer -ffunction-sections -fdata-sections  -g 
+ARCHOPTIMIZATION = -ffunction-sections -fdata-sections  -g 
+
+ARCHWARNINGS := -Wall
+ifeq ($(CONFIG_BUILD_WARNING_NONE),y)
+ARCHWARNINGS := -w
+endif
+ARCHWARNINGS += -Werror
+ARCHWARNINGS += -Wno-strict-aliasing 
+
+CFLAGS +=  ${ARCHCFLAGS} ${ARCHOPTIMIZATION} ${ARCHWARNINGS} ${ARCHINCLUDES} ${CMARCODEFINES}
+
+ifeq ($(CONFIG_OPTION_SAVE_TEMPS),y)
+CFLAGS += --save-temps 
+endif
+###########################################
+#
+#			as flags
+#
+###########################################
+
+AFLAGS = -I "$(GENERATED_DIR)" -include $(GENERATED_DIR)/config.h
+
+###########################################
+#
+#			XIP_ADDR
+#
+###########################################
+ifdef XIP_ADDR
+AFLAGS += -DXIP_ADDR_OFFSET=$(XIP_ADDR)
+else
+XIP_ADDR = 0x7000
+endif
+
+###########################################
+#
+#			link flags
+#
+###########################################
+LDSTARTGROUP:=-Wl,--whole-archive
+
+LDENDGROUP:=-Wl,--no-whole-archive
+
+
+LDSCRIPT = $(GENERATED_DIR)/ld.script
+ARCHSCRIPT = -T$(LDSCRIPT)
+
+LDFLAGS += -nostartfiles -nostdlib -Wl,--gc-sections -ffunction-sections -fdata-sections -fno-delete-null-pointer-checks -mcmodel=large $(MAXOPTIMIZATION) 
+

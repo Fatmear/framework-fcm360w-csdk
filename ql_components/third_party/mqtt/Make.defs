@@ -1,0 +1,15 @@
+VPATH += :third_party
+VPATH += :third_party/mqtt
+VPATH += :third_party/mqtt/include
+
+INCPATHS += third_party/mqtt
+INCPATHS += third_party/mqtt/include
+
+CSRCS += transport.c
+CSRCS += mqtt_msg.c
+CSRCS += transport_ws.c
+CSRCS += mqtt_outbox.c
+CSRCS += platform_tr6600.c
+CSRCS += transport_ssl.c
+CSRCS += transport_tcp.c
+CSRCS += mqtt_client.c
