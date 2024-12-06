@@ -108,18 +108,26 @@ KERNEL_LIB_PATH=$(TOPDIR)/ql_kernel/libs
 KERNEL_LIBS:=$(notdir $(wildcard $(KERNEL_LIB_PATH)/*.a))
 KERNEL_LIBS:=$(filter-out libandes.a,$(KERNEL_LIBS))
 
-ifneq ($(PIO_PROJECT_DIR),)
-KERNEL_LIBS += $(wildcard $(PIO_PROJECT_DIR)/lib/*.a)
-endif
-
 COMPONENTS_LIB_PATH=$(TOPDIR)/ql_components/libs
 COMPONENTS_LIBS:=$(notdir $(wildcard $(COMPONENTS_LIB_PATH)/*.a))
 
+ifneq ($(PIO_PROJECT_DIR),)
+PIO_LIB_PATH=$(PIO_PROJECT_DIR)/lib
+COMPONENTS_LIB_PATH += -L$(PIO_LIB_PATH)
+PIO_LIBS:=$(notdir $(wildcard $(PIO_LIB_PATH)/*.a))
+endif
+
 EXTRA_LINK_LIBGROUPS 	:= $(patsubst lib%.a,-l%,$(KERNEL_LIBS))
 EXTRA_LINK_LIBGROUPS 	+= $(patsubst lib%.a,-l%,$(COMPONENTS_LIBS))
+ifneq ($(PIO_PROJECT_DIR),)
+EXTRA_LINK_LIBGROUPS 	+= $(patsubst lib%.a,-l%,$(PIO_LIBS))
+endif
 
 $(info KERNEL_LIBS=$(KERNEL_LIBS))
 $(info COMPONENTS_LIBS=$(COMPONENTS_LIBS))
+ifneq ($(PIO_PROJECT_DIR),)
+$(info PIO_LIBS=$(PIO_LIBS))
+endif
 $(info EXTRA_LINK_LIBGROUPS=$(EXTRA_LINK_LIBGROUPS))
 
 
